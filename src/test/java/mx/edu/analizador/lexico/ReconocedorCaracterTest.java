@@ -1,6 +1,7 @@
 package mx.edu.analizador.lexico;
 
 import org.junit.jupiter.api.Test;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReconocedorCaracterTest {
@@ -61,11 +62,14 @@ class ReconocedorCaracterTest {
     }
 
     @Test
-    void testCaracteresVecinos() {
-        Cursor cursor = new Cursor("('\\n')");
-        cursor.avanzar(); // Salta el '(' para simular el caso de vecinos
-        Token token = reconocedor.leer(cursor);
-        assertNotNull(token);
-        assertEquals("'\\n'", token.lexema());
+    void testCaracteresVecinosYColumnas() {
+        Lexer lexer = new Lexer(List.of(new ReconocedorCaracter(), new ReconocedorSimbolo()));
+        List<Token> tokens = lexer.analizar("('\\n')");
+
+        assertEquals(List.of(
+            new Token("(", TipoToken.SIMBOLO, 1, 1, 1),
+            new Token("'\\n'", TipoToken.CONSTANTE_CARACTER, 1, 2, 5),
+            new Token(")", TipoToken.SIMBOLO, 1, 6, 6)
+        ), tokens);
     }
 }
