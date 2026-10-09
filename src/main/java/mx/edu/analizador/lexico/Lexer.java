@@ -13,7 +13,7 @@ public class Lexer {
 
     public Lexer() {
     this.reconocedores = List.of(
-        new ReconocedorComentario(),    // 1. Prioridad máxima: descartar comentarios antes de evaluar '/'
+        new ReconocedorComentarioTest(),    // 1. Prioridad máxima: descartar comentarios antes de evaluar '/'
         new ReconocedorDirectiva(),     // 2. Directivas de preprocesador (#include, #define)
         new ReconocedorCadena(),        // 3. Cadenas de texto ("...") y caracteres ('...')
         new ReconocedorCaracter(),      // 3. Cadenas de texto ("...") y caracteres ('...')
