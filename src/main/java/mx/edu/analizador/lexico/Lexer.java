@@ -11,6 +11,11 @@ import java.util.List;
 public class Lexer {
     private final List<ReconocedorToken> reconocedores;
 
+    public Lexer() {
+    this(List.of(
+        new ReconocedorCaracter()
+    ));
+}
     public Lexer(List<ReconocedorToken> reconocedores) {
         this.reconocedores = reconocedores;
     }
