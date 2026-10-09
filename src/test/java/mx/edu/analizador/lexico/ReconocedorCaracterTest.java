@@ -47,4 +47,25 @@ class ReconocedorCaracterTest {
         Cursor cursor = new Cursor("'");
         assertThrows(IllegalStateException.class, () -> reconocedor.leer(cursor));
     }
+
+    @Test
+    void testSaltoDeLineaLiteralLanzaExcepcion() {
+        Cursor cursor = new Cursor("'\n'");
+        assertThrows(IllegalStateException.class, () -> reconocedor.leer(cursor));
+    }
+
+    @Test
+    void testEscapeInvalidoLanzaExcepcion() {
+        Cursor cursor = new Cursor("'\\q'");
+        assertThrows(IllegalStateException.class, () -> reconocedor.leer(cursor));
+    }
+
+    @Test
+    void testCaracteresVecinos() {
+        Cursor cursor = new Cursor("('\\n')");
+        cursor.avanzar(); // Salta el '(' para simular el caso de vecinos
+        Token token = reconocedor.leer(cursor);
+        assertNotNull(token);
+        assertEquals("'\\n'", token.lexema());
+    }
 }
