@@ -25,9 +25,16 @@ public class palabrasReservadas implements ReconocedorToken {
            letra = cursor.siguiente(avance);
         }
 
-        // aqui me falta el for para comparar con el arreglo
-        // le pongo false para que no me marque error en el main en lo que termino
+//for para buscar en el arreglo
+        for (int i = 0; i < reservadas.length; i++) {
+          if (palabra.equals(reservadas[i])) {
+             return true;
+            }
+        }
+
+        // si no esta en la lista entonces es un false
         return false;
+
     }
 
     @Override
