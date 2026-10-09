@@ -11,6 +11,19 @@ import java.util.List;
 public class Lexer {
     private final List<ReconocedorToken> reconocedores;
 
+    public Lexer() {
+    this.reconocedores = List.of(
+        new ReconocedorComentario(),    // 1. Prioridad máxima: descartar comentarios antes de evaluar '/'
+        new ReconocedorDirectiva(),     // 2. Directivas de preprocesador (#include, #define)
+        new ReconocedorCadena(),        // 3. Cadenas de texto ("...") y caracteres ('...')
+        new ReconocedorCaracter(),      // 3. Cadenas de texto ("...") y caracteres ('...')
+        new ReconocedorNumero(),        // 4. Constantes numéricas (enteras y reales)
+        new ReconocedorIdentificador(), // 5. Palabras reservadas e identificadores (variables/funciones)
+        new ReconocedorOperador(),      // 6. Operadores (+, -, *, ==, etc.)
+        new ReconocedorSimbolo()        // 7. Símbolos de puntuación y delimitadores ({}, (), ;, etc.)
+    );
+}
+
     public Lexer(List<ReconocedorToken> reconocedores) {
         this.reconocedores = reconocedores;
     }
