@@ -1,23 +1,16 @@
 package mx.edu.analizador.lexico;
 
-/**
- * Reconoce los símbolos de puntuación del lenguaje C que no son operadores:
- * de agrupación ( ) [ ] { }, separadores ; y , , los puntos suspensivos ...
- * de las funciones con parámetros variables (por ejemplo printf), y # y ##,
- * que se usan dentro de las macros.
- *
- * Usa la regla de la "pieza más larga": "..." se toma completo y "##" no se parte en dos "#".
- *
- * Orden en el Lexer: debe ir ANTES que ReconocedorOperador, para que "..." no se lea
- * como tres operadores "."; y DESPUÉS del reconocedor de directivas, para que "#include"
- * se reconozca como directiva y no como el símbolo "#".
- */
+
 public class ReconocedorSimbolo implements ReconocedorToken {
 
-
+    // Ordenados de MAYOR a MENOR longitud: así siempre se prueba primero el más largo.
     private static final String[] SIMBOLOS = {
-
-            "...", "##", "(", ")", "{", "}", "[", "]", ";", ",", "#"
+            // 3 caracteres
+            "...",
+            // 2 caracteres
+            "##",
+            // 1 carácter
+            "(", ")", "{", "}", "[", "]", ";", ",", "#"
     };
 
     @Override

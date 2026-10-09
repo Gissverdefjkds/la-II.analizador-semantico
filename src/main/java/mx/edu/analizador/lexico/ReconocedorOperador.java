@@ -1,17 +1,16 @@
 package mx.edu.analizador.lexico;
 
+
 public class ReconocedorOperador implements ReconocedorToken {
 
-    private static String[] OPERADORES = {
 
-// 3 caracter
+    private static final String[] OPERADORES = {
+            // 3 caracteres
             "<<=", ">>=",
-
             // 2 caracteres
-            "++", "--", "==", "!=", "<=", ">=", "&&", "||", "<<", ">>", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=",
-            "->",
-
-            //1 caracter
+            "++", "--", "==", "!=", "<=", ">=", "&&", "||", "<<", ">>",
+            "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "->",
+            // 1 carácter
             "+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|", "^", "~", "?", ":", "."
     };
 
@@ -26,26 +25,27 @@ public class ReconocedorOperador implements ReconocedorToken {
         int inicio = cursor.columna();
         String lexema = buscarOperador(cursor);
 
-        for (int i = 0; i < lexema.length(); i++) {
 
+        for (int i = 0; i < lexema.length(); i++) {
             cursor.avanzar();
         }
-        int fin = cursor.columna()  - 1;
-        return new Token(lexema, TipoToken.OPERADOR, linea, inicio, fin);
 
+        int fin = cursor.columna() - 1;
+        return new Token(lexema, TipoToken.OPERADOR, linea, inicio, fin);
     }
 
 
-    private  String buscarOperador(Cursor cursor) {
+    private String buscarOperador(Cursor cursor) {
         for (String operador : OPERADORES) {
-            if (coincide (cursor, operador)) return operador;
+            if (coincide(cursor, operador)) return operador;
         }
         return null;
     }
 
+
     private boolean coincide(Cursor cursor, String operador) {
         for (int i = 0; i < operador.length(); i++) {
-            if(cursor.siguiente(i) != operador.charAt(i)) return false;
+            if (cursor.siguiente(i) != operador.charAt(i)) return false;
         }
         return true;
     }

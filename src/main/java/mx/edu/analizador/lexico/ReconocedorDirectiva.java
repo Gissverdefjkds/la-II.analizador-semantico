@@ -5,58 +5,75 @@ import java.util.Set;
 
 public class ReconocedorDirectiva implements ReconocedorToken {
 
-    private static final String[] DIRECTIVAS = {
+    private static final Set<String> DIRECTIVAS = Set.of(
             "include", "define", "undef",
             "if", "ifdef", "ifndef", "elif", "elifdef", "elifndef", "else", "endif",
             "line", "error", "warning", "pragma", "embed"
-    };
-    private static final int VENTANA = 64;
+    );
 
     @Override
     public boolean puedeIniciar(Cursor cursor) {
-        if (cursor.actual() != '#') return false;
-        return longitudDirectiva(mirarAdelante(cursor), 0) > 0;
+        if (cursor.actual() != '#' || !esInicioDeLinea(cursor)) return false;
+        return tieneNombreDeDirectiva(cursor);
     }
-// s
+
     @Override
     public Token leer(Cursor cursor) {
-        String adelante = mirarAdelante(cursor);
-        int longitud = longitudDirectiva(adelante, 0);
-
         int linea = cursor.linea();
         int inicio = cursor.columna();
-        for (int i = 0; i < longitud; i++) {
+        StringBuilder lexema = new StringBuilder();
+
+        while (!cursor.fin() && !esFinDeLinea(cursor)) {
+            if (esContinuacionDeLinea(cursor)) {
+                // Consumimos la \ y el salto de línea, y seguimos en la línea siguiente.
+                while (cursor.actual() != '\n') {
+                    lexema.append(cursor.actual());
+                    cursor.avanzar();
+                }
+            }
+            lexema.append(cursor.actual());
             cursor.avanzar();
         }
+
         int fin = cursor.columna() - 1;
-
-        return new Token(adelante.substring(0, longitud), TipoToken.DIRECTIVA, linea, inicio, fin);
+        return new Token(lexema.toString(), TipoToken.DIRECTIVA, linea, inicio, fin);
     }
-    private String mirarAdelante(Cursor cursor) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(cursor.actual());
-        for (int n = 1; n < VENTANA; n++) {
+
+
+    private boolean esInicioDeLinea(Cursor cursor) {
+        for (int n = -1; ; n--) {
             char c = cursor.siguiente(n);
-            if (c == '\n' || c == '\r' || c == '\0') break;
-            sb.append(c);
+            if (c == '\n' || c == '\0') return true;   // '\0' = inicio del archivo
+            if (c != ' ' && c != '\t') return false;
         }
-        return sb.toString();
     }
 
-    static int longitudDirectiva(String texto, int inicio) {
-        int i = inicio;
-        if (i >= texto.length() || texto.charAt(i) != '#') return 0;
-        i++;
 
-        while (i < texto.length() && (texto.charAt(i) == ' ' || texto.charAt(i) == '\t')) i++;
+    private boolean tieneNombreDeDirectiva(Cursor cursor) {
+        int i = 1;
+        while (cursor.siguiente(i) == ' ' || cursor.siguiente(i) == '\t') i++;
 
-        int inicioNombre = i;
-        while (i < texto.length() && Character.isLetter(texto.charAt(i))) i++;
-
-        if (!java.util.Arrays.asList(DIRECTIVAS).contains(texto.substring(inicioNombre, i))) return 0;        if (i < texto.length()
-                && (Character.isLetterOrDigit(texto.charAt(i)) || texto.charAt(i) == '_')) {
-            return 0;
+        StringBuilder nombre = new StringBuilder();
+        while (Character.isLetter(cursor.siguiente(i))) {
+            nombre.append(cursor.siguiente(i));
+            i++;
         }
-        return i - inicio;
+
+
+        char despues = cursor.siguiente(i);
+        if (Character.isLetterOrDigit(despues) || despues == '_') return false;
+
+        return DIRECTIVAS.contains(nombre.toString());
+    }
+
+
+    private boolean esFinDeLinea(Cursor cursor) {
+        return cursor.actual() == '\n' || (cursor.actual() == '\r' && cursor.siguiente() == '\n');
+    }
+
+
+    private boolean esContinuacionDeLinea(Cursor cursor) {
+        if (cursor.actual() != '\\') return false;
+        return cursor.siguiente(1) == '\n' || (cursor.siguiente(1) == '\r' && cursor.siguiente(2) == '\n');
     }
 }
