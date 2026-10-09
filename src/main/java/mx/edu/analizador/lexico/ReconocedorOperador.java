@@ -14,6 +14,7 @@ public class ReconocedorOperador implements ReconocedorToken {
             "+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|", "^", "~", "?", ":", "."
     };
 
+    
     @Override
     public boolean puedeIniciar(Cursor cursor) {
         return buscarOperador(cursor) != null;
