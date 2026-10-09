@@ -9,5 +9,7 @@ public enum TipoToken {
     CADENA,
     OPERADOR,
     SIMBOLO,
-    DIRECTIVA
+    DIRECTIVA,
+    COMENTARIO_LINEA,
+    COMENTARIO_BLOQUE
 }
