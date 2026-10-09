@@ -4,10 +4,26 @@ public class palabrasReservadas implements ReconocedorToken {
 
     // arreglo de palabras reservadas que nos tocan
     private String[] reservadas = {
-       "int", "float", "char", "double", "void",
-            "if", "else", "while", "for", "do",
-            "return", "switch", "case", "default", "break",
-            "and"
+            "and", "asm", "auto",
+            "bitand", "bitor", "bool", "break",
+            "case", "catch", "char", "class",
+            "compl", "const", "constexpr",
+            "continue", "decltype", "default", "delete",
+            "do", "double", "else",
+            "enum", "explicit", "export", "extern",
+            "false", "float", "for", "friend",
+            "goto", "if", "inline", "int",
+            "long", "mutable", "namespace", "new",
+            "noexcept", "not", "nullptr",
+            "operator", "or", "private",
+            "protected", "public", "register",
+            "return", "short", "signed", "sizeof",
+            "static", "struct", "switch",
+            "template", "this", "throw", "true",
+            "try", "typedef", "typeid", "typename",
+            "union", "unsigned", "using", "virtual",
+            "void", "volatile", "while",
+            "xor"
     };
 
     @Override
