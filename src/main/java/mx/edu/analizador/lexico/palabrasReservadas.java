@@ -31,8 +31,33 @@ public class palabrasReservadas implements ReconocedorToken {
     }
 
     @Override
-    public Token leer(Cursor cursor) {
-        // todavia no hago esta parte
-        return null;
+public Token leer(Cursor cursor) {
+
+    // Guardamos dónde comienza la palabra
+    int linea = cursor.linea();
+    int inicio = cursor.columna();
+
+    String palabra = "";
+
+    // Leemos la palabra completa
+    while (!cursor.fin() &&
+           (Character.isLetterOrDigit(cursor.actual())
+            || cursor.actual() == '_')) {
+
+        palabra = palabra + cursor.actual();
+        cursor.avanzar();
     }
+
+    // Guardamos la columna donde terminó
+    int fin = cursor.columna() - 1;
+
+    // Creamos el token
+    return new Token(
+        palabra,
+        TipoToken.PALABRA_RESERVADA,
+        linea,
+        inicio,
+        fin
+    );
+}
 }
