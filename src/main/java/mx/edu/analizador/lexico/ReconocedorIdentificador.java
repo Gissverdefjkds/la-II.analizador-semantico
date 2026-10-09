@@ -1,28 +1,72 @@
 package mx.edu.analizador.lexico;
 
 public class ReconocedorIdentificador implements ReconocedorToken {
-    //El identificador empieza con letra, _ o $
+
+    // palabras reservadas
+    private String[] reservadas = {
+        "auto", "break", "case", "char", "const", "continue",
+          "default", "do", "double", "else", "enum", "extern",
+        "float", "for", "goto", "if", "inline", "int", "long",
+           "register", "restrict", "return", "short", "signed",
+         "sizeof", "static", "struct", "switch", "typedef",
+        "union", "unsigned", "void", "volatile", "while",
+        "_Alignas", "_Alignof", "_Atomic", "_Bool", "_Complex",
+        "_Generic", "_Imaginary", "_Noreturn", "_Static_assert",
+          "_Thread_local"
+    };
+
+    // el identificador  con letra ASCII o _
+    private static boolean esInicioIdentificador(char c) {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+    }
+
+    // y sigue con letras, dígitos o _
+    private static boolean esParteIdentificador(char c) {
+        return esInicioIdentificador(c) || (c >= '0' && c <= '9');
+    }
 
     @Override
-    public boolean puedeIniciar(Cursor cursor){
-        if (cursor.fin()) return false;
-        char c = cursor.actual();
-        return Character.isLetter(c) || c == '_' || c == '$';
-
+    public boolean puedeIniciar(Cursor cursor) {
+      if (cursor.fin()) {
+         return false;
+        }
+        return esInicioIdentificador(cursor.actual());
     }
 
     @Override
     public Token leer(Cursor cursor) {
-        int linea =  cursor.linea();
-        int inicio = cursor.columna();
-        StringBuilder lexema = new StringBuilder();
-        //Se sigue leyendo mientras haya letra, numero,_ o $
-        while(!cursor.fin() && (Character.isLetterOrDigit(cursor.actual()) || cursor.actual() == '_' ||  cursor.actual() == '$')){
-            lexema.append(cursor.actual());
-            cursor.avanzar();
-        }
-        int fin = cursor.columna() - 1;
 
-        return new Token (lexema.toString(), TipoToken.IDENTIFICADOR, linea, inicio, fin);
-    }
+        // donde comienza la palabra
+    int linea = cursor.linea();
+    int inicio = cursor.columna();
+
+        String palabra = "";
+
+        // leer el identificador completo
+       while (!cursor.fin() && esParteIdentificador(cursor.actual())) {
+         palabra = palabra + cursor.actual();
+         cursor.avanzar();
+        }
+
+       // la columna donde termino
+     int fin = cursor.columna() - 1;
+
+     // ver si es palabra reservada
+      boolean esReservada = false;
+      for (int i = 0; i < reservadas.length; i++) {
+         if (reservadas[i].equals(palabra)) {
+            esReservada = true;
+              break;
+            }
+        }
+
+     TipoToken tipo;
+        if (esReservada) {
+            tipo = TipoToken.PALABRA_RESERVADA;
+       } else {
+         tipo = TipoToken.IDENTIFICADOR;
+      }
+
+     return new Token(palabra, tipo, linea, inicio, fin);
+  }
 }
