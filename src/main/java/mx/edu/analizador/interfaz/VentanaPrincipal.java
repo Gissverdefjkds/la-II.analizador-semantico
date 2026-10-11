@@ -100,6 +100,34 @@ public class VentanaPrincipal extends JFrame {
         divisor.setDividerLocation(550);
         divisor.setResizeWeight(0.5);
         add(divisor, BorderLayout.CENTER);
+    };
+    
+// Tabla de errores semánticos (abajo)
+        String[] columnasErrores = {"Error", "Descripción", "Línea", "Inicio", "Fin"};
+        modeloErrores = new DefaultTableModel(columnasErrores, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        JTable tablaErrores = new JTable(modeloErrores);
+        tablaErrores.setRowHeight(22);
+        tablaErrores.getColumnModel().getColumn(0).setPreferredWidth(200);
+        tablaErrores.getColumnModel().getColumn(1).setPreferredWidth(400);
+        tablaErrores.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tablaErrores.getColumnModel().getColumn(3).setPreferredWidth(60);
+        tablaErrores.getColumnModel().getColumn(4).setPreferredWidth(60);
+
+        JScrollPane scrollErrores = new JScrollPane(tablaErrores);
+        scrollErrores.setPreferredSize(new Dimension(0, 130));
+
+        JPanel panelErrores = new JPanel(new BorderLayout());
+        JLabel tituloErrores = new JLabel("Errores semánticos");
+        tituloErrores.setFont(tituloErrores.getFont().deriveFont(Font.BOLD));
+        panelErrores.add(tituloErrores, BorderLayout.NORTH);
+        panelErrores.add(scrollErrores, BorderLayout.CENTER);
+        add(panelErrores, BorderLayout.SOUTH);
     }
 
     private void elegirArchivo() {
