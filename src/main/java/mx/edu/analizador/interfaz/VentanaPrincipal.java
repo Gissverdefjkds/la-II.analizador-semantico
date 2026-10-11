@@ -3,6 +3,7 @@ package mx.edu.analizador.interfaz;
 import mx.edu.analizador.LectorC;
 import mx.edu.analizador.lexico.Lexer;
 import mx.edu.analizador.lexico.Token;
+import mx.edu.analizador.semantico.ErrorSemantico;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
