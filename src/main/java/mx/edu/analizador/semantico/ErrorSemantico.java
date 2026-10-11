@@ -1,5 +1,10 @@
 package mx.edu.analizador.semantico;
 
+import mx.edu.analizador.lexico.Token;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ErrorSemantico {
     private final String nombre;
     private final String descripcion;
@@ -39,4 +44,11 @@ public class ErrorSemantico {
     public String toString() {
         return nombre + " en línea " + linea + ", columna " + inicio;
     }*/
+
+    //Busca los errores con las otras clases (por ahora, solo el error 9)
+    public static List<ErrorSemantico> buscarErrores(List<Token> tokens) {
+        List<ErrorSemantico> errores = new ArrayList<>();
+        errores.addAll(new ErrorContinue().analizar(tokens));
+        return errores;
+    }
 }
